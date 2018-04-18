@@ -10,6 +10,10 @@ public class Simulation {
 
     public static final int MAX_SIZE = 512;
 
+    public Set<Being> getBeings() {
+        return beings;
+    }
+
     private final Set<Being> beings;
     private final Random random;
 
