@@ -1,9 +1,7 @@
 package candy.crush;
 
 import candy.crush.domain.beings.Wildlife;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -27,5 +25,13 @@ class SimulationTest {
         simulation.addBeing(wildlife);
         assertEquals(1, simulation.getBeings().size());
         assertEquals(42, simulation.getBeings().iterator().next().getSize());
+    }
+
+    @Test
+    @DisplayName("Captured 'Wildlife' will be removed from the 'Simulation' so that they cannot be captured again")
+    @Tag("Constraints")
+    void capturedAnimals_willBeRemovedFromSimulation() {
+       this.addBeing();
+
     }
 }

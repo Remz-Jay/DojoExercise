@@ -1,10 +1,11 @@
 package candy.crush;
 
 import candy.crush.domain.beings.Being;
+import candy.crush.domain.beings.Child;
+import candy.crush.domain.beings.DrMonkey;
 import candy.crush.domain.beings.Wildlife;
 
 import java.util.*;
-import java.util.logging.Logger;
 
 public class Simulation {
 
@@ -15,6 +16,9 @@ public class Simulation {
     }
 
     private final Set<Being> beings;
+    private final Set<Child> children;
+    private final DrMonkey theDoctor;
+
     private final Random random;
 
     private final String[] wildLifeNames = {
@@ -31,6 +35,8 @@ public class Simulation {
 
     public Simulation() {
         beings = new HashSet<>();
+        children = new HashSet<>();
+        theDoctor = new DrMonkey("Dr. Monkey", 1);
         random = new Random();
     }
 
@@ -43,8 +49,12 @@ public class Simulation {
     }
 
     public void addBeing(Being being) {
-        System.out.println("[Simulation] A [" + being + "] will be added to the simulation");
+        System.out.println("[Simulation] A Being[" + being + "] will be added to the simulation");
         beings.add(being);
+    }
+    public void addChild(Child child) {
+        System.out.println("[Simulation] A Child[" + child + "] will be added to the simulation");
+        children.add(child);
     }
 
 }

@@ -7,6 +7,8 @@ import java.util.Optional;
 
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -44,6 +46,8 @@ class BallTest {
         assertEquals(Optional.of(wildlife), ball.retrieveBeing());
     }
     @Test
+    @DisplayName("A 'Ball' can only capture one 'Being'.")
+    @Tag("Constraints")
     public void cannotCaptureMoreThanOneBeing() {
         Wildlife wildlife = new Wildlife("first", 0);
         assertTrue(ball.capture(wildlife));

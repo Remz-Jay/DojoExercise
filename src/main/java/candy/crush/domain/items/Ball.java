@@ -1,7 +1,6 @@
 package candy.crush.domain.items;
 
 import candy.crush.domain.beings.Being;
-import candy.crush.domain.beings.Wildlife;
 
 import java.util.Optional;
 
@@ -28,5 +27,8 @@ public class Ball {
         } else {
             return false;
         }
+    }
+    public boolean isEmpty() {
+        return containedBeing == null;
     }
 }

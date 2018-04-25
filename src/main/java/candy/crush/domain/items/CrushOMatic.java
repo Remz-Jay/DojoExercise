@@ -8,32 +8,49 @@ import java.util.List;
 import java.util.Optional;
 
 public class CrushOMatic {
-    private static CrushOMatic instance = new CrushOMatic();
-    private CrushOMatic() {
-        this.readyToPickUp = new ArrayList<>();
-    }
+    private List<Candy> readyToPickUp;
+    private final static CrushOMatic instance = new CrushOMatic();
+
     public static CrushOMatic getInstance() {
         return instance;
     }
-    private List<Candy> readyToPickUp;
 
     public Ball crush(Ball ball) {
-        Optional<Being> ballContents = ball.retrieveBeing();
-        if (ballContents.isPresent()){
-            Being animal = ballContents.get();
-            if (animal instanceof Wildlife) {
-                Candy candy = new Candy(animal.getSize());
-                readyToPickUp.add(candy);
-            } else {
-                // cannot crush non-Wildlife.
-            }
+        Being ballContents = extractBall(ball);
+        if (isAnAnimal(ballContents)) {
+            crushObject(ballContents);
+        } else {
+            throw new CannotCrushException();
         }
         return ball;
     }
 
     public List<Candy> retrieveCandy() {
         List<Candy> temp = readyToPickUp;
-        readyToPickUp = new ArrayList<Candy>();
+        readyToPickUp = new ArrayList<>();
         return temp;
     }
+
+    public class CannotCrushException extends RuntimeException {
+
+    }
+    private CrushOMatic() {
+        this.readyToPickUp = new ArrayList<>();
+    }
+    private Being extractBall(Ball ball) {
+        Optional<Being> ballContents = ball.retrieveBeing();
+        return ballContents.orElse(null);
+    }
+
+    protected void crushObject(Object itemToBeCrushed) {
+        if(!(itemToBeCrushed instanceof Being))
+            throw new CannotCrushException();
+        Candy candy = new Candy(((Being)itemToBeCrushed).getSize());
+        readyToPickUp.add(candy);
+    }
+
+    private boolean isAnAnimal(Being animal) {
+        return animal instanceof Wildlife;
+    }
 }
+
