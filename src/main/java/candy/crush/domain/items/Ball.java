@@ -1,14 +1,20 @@
 package candy.crush.domain.items;
 
 import candy.crush.domain.beings.Being;
+import candy.crush.domain.beings.Wildlife;
 
 import java.util.Optional;
 
 public class Ball {
     private Being containedBeing;
 
-    public Optional<Being> getContainedBeing() {
-        return Optional.ofNullable(containedBeing);
+    public String peek(){
+        return containedBeing.toString();
+    }
+    public Optional<Being> retrieveBeing() {
+        Being beingToBeReturned = containedBeing;
+        this.containedBeing = null;
+        return Optional.ofNullable(beingToBeReturned);
     }
 
     public void setContainedBeing(Being containedBeing) {
@@ -16,15 +22,11 @@ public class Ball {
     }
 
     public boolean capture(Being being) {
-        if (containedBeing == null) {
+        if (containedBeing == null && being != null) {
             this.setContainedBeing(being);
             return true;
         } else {
             return false;
         }
     }
-
-    // TODO: What if we catch nothing?
-    // TODO: Retrieving items.. we can only do that once. Is getContainedBeing valid in that case?
-    // TODO: Does the retrieve function return the item and/or set the ball to empty?
 }

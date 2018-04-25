@@ -17,7 +17,7 @@
 
 .console .text-area {
     -fx-text-fill: lightgray;
-    -fx-font-family: "Consolas";
+    -fx-font-family: "monospaced";
     -fx-font-size:14;
     -fx-border-color: black;
 }

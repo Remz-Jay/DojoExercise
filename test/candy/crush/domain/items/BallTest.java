@@ -22,7 +22,7 @@ class BallTest {
 
     @Test
     public void newBallIsEmpty() {
-        Optional<Being> result = ball.getContainedBeing();
+        Optional<Being> result = ball.retrieveBeing();
         assertFalse(result.isPresent());
     }
 
@@ -31,7 +31,7 @@ class BallTest {
         Being being = new Being("", 0);
         ball.setContainedBeing(being);
 
-        Optional<Being> result = ball.getContainedBeing();
+        Optional<Being> result = ball.retrieveBeing();
         assertTrue(result.isPresent());
         assertEquals(being, result.get());
     }
@@ -41,16 +41,23 @@ class BallTest {
         Wildlife wildlife = new Wildlife("", 0);
 
         assertTrue(ball.capture(wildlife));
-        assertEquals(Optional.of(wildlife), ball.getContainedBeing());
+        assertEquals(Optional.of(wildlife), ball.retrieveBeing());
     }
     @Test
     public void cannotCaptureMoreThanOneBeing() {
         Wildlife wildlife = new Wildlife("first", 0);
         assertTrue(ball.capture(wildlife));
-        assertEquals(Optional.of(wildlife), ball.getContainedBeing());
+        assertEquals(wildlife.toString(), ball.peek());
 
         Wildlife secondBeing = new Wildlife("second", 0);
         assertFalse(ball.capture(secondBeing));
-        assertEquals(Optional.of(wildlife), ball.getContainedBeing());
+        assertEquals(Optional.of(wildlife), ball.retrieveBeing());
+    }
+
+    @Test
+    public void cannotCatchNothing() {
+        assertFalse(ball.capture(null));
+        Optional<Being> result = ball.retrieveBeing();
+        assertFalse(result.isPresent());
     }
 }
