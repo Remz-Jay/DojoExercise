@@ -21,7 +21,7 @@ public class Simulation {
 
     private final Random random;
 
-    private final String[] wildLifeNames = {
+    private static final String[] wildLifeNames = {
             "Gazely",
             "Kangareon",
             "Crocash",
@@ -32,7 +32,14 @@ public class Simulation {
             "Goldoyote",
             "Butterflux",
             "Dragonightmare"};
-
+    private static final String[] childNames = {
+            "Kwik",
+            "Kwek",
+            "Kwak",
+            "Lizzy",
+            "Juultje",
+            "Babetje",
+    };
     public Simulation() {
         beings = new HashSet<>();
         children = new HashSet<>();
@@ -52,9 +59,10 @@ public class Simulation {
         System.out.println("[Simulation] A Being[" + being + "] will be added to the simulation");
         beings.add(being);
     }
-    public void addChild(Child child) {
-        System.out.println("[Simulation] A Child[" + child + "] will be added to the simulation");
-        children.add(child);
+    public void addChild() {
+        Child c = new Child(childNames[random.nextInt(childNames.length)],1);
+        System.out.println("[Simulation] A Child[" + c + "] will be added to the simulation");
+        children.add(c);
     }
 
 }

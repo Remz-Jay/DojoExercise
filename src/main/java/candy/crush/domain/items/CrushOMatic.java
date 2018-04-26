@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public class CrushOMatic {
     private List<Candy> readyToPickUp;
-    private final static CrushOMatic instance = new CrushOMatic();
+    private static final CrushOMatic instance = new CrushOMatic();
 
     public static CrushOMatic getInstance() {
         return instance;
