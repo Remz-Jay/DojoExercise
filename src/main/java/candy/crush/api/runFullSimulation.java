@@ -1,16 +1,16 @@
 package candy.crush.api;
 
 import candy.crush.CandyCrushCli;
+import candy.crush.Simulation;
 import candy.crush.domain.beings.Being;
 import candy.crush.domain.beings.Child;
-import candy.crush.domain.beings.Wildlife;
 import candy.crush.domain.items.Ball;
-
-import java.util.Set;
 
 import static candy.crush.CandyCrushCli.print;
 
-public class runFullSimulation extends apiAction {
+public class runFullSimulation implements ApiAction {
+    private Simulation simulation;
+
     @Override
     public void register() {
 
@@ -36,5 +36,10 @@ public class runFullSimulation extends apiAction {
         Being animal = simulation.getRandomBeing();
         child.catchAnimal(animal);
         return true;
+    }
+
+    @Override
+    public void setSimulation(Simulation s) {
+        this.simulation = s;
     }
 }

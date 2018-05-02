@@ -1,11 +1,12 @@
 package candy.crush.api;
 
+import candy.crush.CandyCrushCli;
 import candy.crush.Simulation;
 
-public class addWildlife implements ApiAction {
+public class quit implements ApiAction {
     Simulation simulation;
 
-    public addWildlife() {
+    public quit() {
         this.register();
     }
     @Override
@@ -15,16 +16,13 @@ public class addWildlife implements ApiAction {
 
     @Override
     public String getDescription() {
-        return "adds wildlife to the simulation";
+        return "quits the simulation. bye!";
     }
 
     @Override
     public boolean doAction(String[] args) {
-        int howMany = 10;
-        if(args.length > 0) {
-            howMany = Integer.parseInt(args[0]);
-        }
-        this.simulation.generateWildLife(howMany);
+        CandyCrushCli.printFooter();
+        System.exit(0);
         return true;
     }
 

@@ -42,7 +42,7 @@ class SimulationTest {
     void getRandomBeingRemovesWildlife() {
         simulation.generateWildLife(10);
         ArrayList<Being> beings = simulation.getBeings();
-        simulation.getRandomBeing();
+        assertEquals(Wildlife.class, simulation.getRandomBeing().getClass());
         assertEquals(9, beings.size());
     }
 
@@ -52,9 +52,11 @@ class SimulationTest {
     }
 
     @Test
-    void getRandom() {
-        simulation.generateWildLife(10);
-        assertNotNull(simulation.getRandomBeing());
+    void getSingleRandomReturnsTheSameObject() {
+        Wildlife l = new Wildlife("one", 1);
+        simulation.addBeing(l);
+        assertEquals(l, simulation.getRandomBeing());
+        assertEquals(0, simulation.getBeings().size());
     }
 
 }

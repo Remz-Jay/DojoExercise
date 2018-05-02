@@ -1,13 +1,9 @@
 package candy.crush;
 
-import candy.crush.api.apiAction;
-import candy.crush.domain.beings.Child;
-import candy.crush.domain.items.Ball;
+import candy.crush.api.ApiAction;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Scanner;
-import java.util.ServiceLoader;
 
 import static java.lang.System.*;
 
@@ -39,14 +35,6 @@ public class CandyCrushCli {
         }
     }
 
-    public static void print(String toPrint) {
-        print(toPrint, ANSI.WHITE);
-    }
-
-    public static void print(String toPrint, ANSI color) {
-        out.println(color + toPrint + ANSI.RESET);
-    }
-
     private final Simulation simulation;
 
     private CandyCrushCli(Simulation simulation) {
@@ -54,12 +42,46 @@ public class CandyCrushCli {
     }
 
     public static void main(String[] args) {
-        Simulation simulation = createSimulation();
-
+        Simulation simulation = new Simulation();
         CandyCrushCli main = new CandyCrushCli(simulation);
+
         printHeader();
-        main.scanAndHandleInputUntilQuitIsGiven();
-        main.printFooter();
+        main.scanAndHandleInput();
+    }
+
+
+    private void scanAndHandleInput() {
+        Scanner scanner = new Scanner(in);
+        while (true) {
+            try {
+                out.print("<Command>:");
+                String input = scanner.nextLine();
+                String[] splitInput = input.split("\\s+");
+                String command = splitInput[0];
+                String[] commandArgs = Arrays.copyOfRange(splitInput, 1, splitInput.length);
+                handleCommand(command, commandArgs);
+            } catch (Exception e) {
+                print("Unable to perform action, caught Exception [" + e + "]");
+            }
+        }
+    }
+
+    private void handleCommand(String command, String[] commandArgs) {
+        try {
+            ApiAction o = (ApiAction) Class.forName("candy.crush.api." + command).newInstance();
+            o.setSimulation(this.simulation);
+            o.doAction(commandArgs);
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException i) {
+            showUndefinedCommandInformation(command, commandArgs);
+        }
+
+    }
+    public static void print(String toPrint) {
+        print(toPrint, ANSI.WHITE);
+    }
+
+    public static void print(String toPrint, ANSI color) {
+        out.println(color + toPrint + ANSI.RESET);
     }
 
     private static void printHeader() {
@@ -72,69 +94,7 @@ public class CandyCrushCli {
         print("\t- Bringing you the best flavored candy since 2017! -", ANSI.BLUE);
     }
 
-    private void scanAndHandleInputUntilQuitIsGiven() {
-        Scanner scanner = new Scanner(in);
-        inputScannerLoop:
-
-        while (true) {
-            try {
-                out.print("<Command>:");
-                String input = scanner.nextLine();
-                String[] splitInput = input.split("\\s+");
-                String command = splitInput[0];
-                String[] commandArgs = Arrays.copyOfRange(splitInput, 1, splitInput.length);
-                switch (command) {
-                    case "quit":
-                        break inputScannerLoop;
-                    default:
-                        handleCommand(command, commandArgs);
-                        break;
-
-                }
-            } catch (Exception e) {
-                print("Unable to perform action, caught Exception [" + e + "]");
-            }
-        }
-    }
-    private void handleCommand(String command, String[] commandArgs) {
-        if (command.equals("help")) {
-            showHelp();
-        } else {
-            try {
-                apiAction o = (apiAction) Class.forName("candy.crush.api." + command).newInstance();
-                o.setSimulation(this.simulation);
-                o.doAction(commandArgs);
-            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException i) {
-                // print("Could not find / instantiate action " + command);
-                showUndefinedCommandInformation(command, commandArgs);
-            }
-        }
-
-//        switch (command) {
-//            case "help":
-//                showHelp();
-//                break;
-//            case "ac":
-//            case "addchild":
-//                addChild();
-//                break;
-//            case "fs":
-//            case "fullsimulation":
-//                runFullSimulation();
-//                break;
-//        }
-    }
-
-
-    private void addWildLife(Integer amountOfWildlifeToAdd) {
-        simulation.generateWildLife(amountOfWildlifeToAdd);
-    }
-
-    private void addChild() {
-        simulation.addChild();
-    }
-
-    private void printFooter() {
+    public static void printFooter() {
 
         print("Thank you for using the Crush'o'matic! Have a nice day!");
         print("        ___      .-\"\"-.      ___", ANSI.BLUE);
@@ -147,23 +107,5 @@ public class CandyCrushCli {
 
     private void showUndefinedCommandInformation(String command, String[] commandArgs) {
         print("Undefined command [" + command + "] with arguments [" + Arrays.toString(commandArgs) + "]");
-    }
-
-    private static Simulation createSimulation() {
-        Simulation simulation = new Simulation();
-        return simulation;
-    }
-
-
-    private static void showHelp() {
-        ServiceLoader<apiAction> load = ServiceLoader.load(apiAction.class);
-        load.forEach(service -> {
-            print(service.getClass().getSimpleName() + "\t\t\t" + service.getDescription());
-        });
-//        print("addwildlife [numberOfWildLife]       - adds wildlife to the simulation");
-//        print("addchild                             - adds a single child to the simulation");
-//        print("fulsimulation                        - run a full simulation");
-//        print("help                                 - shows this information");
-//        print("quit                                 - ends this process");
     }
 }
