@@ -3,7 +3,7 @@ package candy.crush.domain.beings;
 public class Being {
 
     private final String name;
-    private int size;
+    private final int size;
 
     public Being(String name, int size) {
         this.name = name;

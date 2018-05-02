@@ -11,10 +11,6 @@ public class Candy {
         return amountOfSugar;
     }
 
-    public void setAmountOfSugar(int amountOfSugar) {
-        this.amountOfSugar = amountOfSugar;
-    }
-
-    private int amountOfSugar;
+    private final int amountOfSugar;
 }
 

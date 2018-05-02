@@ -59,14 +59,15 @@ public class CandyCrushCli {
                 String[] splitInput = input.split("\\s+");
                 String command = splitInput[0];
                 String[] commandArgs = Arrays.copyOfRange(splitInput, 1, splitInput.length);
-                handleCommand(command, commandArgs);
+                if (!handleCommand(command, commandArgs))
+                    break;
             } catch (Exception e) {
                 print("Unable to perform action, caught Exception [" + e + "]");
             }
         }
     }
 
-    private void handleCommand(String command, String[] commandArgs) {
+    private boolean handleCommand(String command, String[] commandArgs) {
         try {
             ApiAction o = (ApiAction) Class.forName("candy.crush.api." + command).newInstance();
             o.setSimulation(this.simulation);
@@ -74,7 +75,7 @@ public class CandyCrushCli {
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException i) {
             showUndefinedCommandInformation(command, commandArgs);
         }
-
+        return true;
     }
     public static void print(String toPrint) {
         print(toPrint, ANSI.WHITE);

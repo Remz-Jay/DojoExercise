@@ -3,15 +3,7 @@ package candy.crush.api;
 import candy.crush.Simulation;
 
 public class addWildlife implements ApiAction {
-    Simulation simulation;
-
-    public addWildlife() {
-        this.register();
-    }
-    @Override
-    public void register() {
-
-    }
+    private Simulation simulation;
 
     @Override
     public String getDescription() {
@@ -19,13 +11,12 @@ public class addWildlife implements ApiAction {
     }
 
     @Override
-    public boolean doAction(String[] args) {
+    public void doAction(String[] args) {
         int howMany = 10;
         if(args.length > 0) {
             howMany = Integer.parseInt(args[0]);
         }
         this.simulation.generateWildLife(howMany);
-        return true;
     }
 
     @Override

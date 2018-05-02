@@ -16,7 +16,7 @@ public class Child extends Being {
         return canCatchAnimal() && ball.capture(animal);
     }
 
-    public Ball retrieveBall() {
+    private Ball retrieveBall() {
         Ball b = this.ball;
         this.ball = null;
         return b;
@@ -34,7 +34,7 @@ public class Child extends Being {
         super(name, size);
     }
 
-    private List<Candy> candies = new ArrayList<>();
+    private final List<Candy> candies = new ArrayList<>();
 
     public boolean canCatchAnimal() {
         return hasBall() && ball.isEmpty();
@@ -55,10 +55,13 @@ public class Child extends Being {
     public boolean exchangeCatchForCandy(CrushOMatic theMachine) {
         this.ball = theMachine.crush(this.retrieveBall());
         if (this.ball.isEmpty()) {
-            candies.addAll(theMachine.retrieveCandy());
+            retrieveCandyFromTheMachine(theMachine);
             return true;
         }
         return false;
+    }
+    private void retrieveCandyFromTheMachine(CrushOMatic theMachine) {
+        this.candies.addAll(theMachine.retrieveCandy());
     }
 
     public class CannotCatchSelfException extends RuntimeException {
