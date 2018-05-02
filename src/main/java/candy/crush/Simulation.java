@@ -4,18 +4,32 @@ import candy.crush.domain.beings.Being;
 import candy.crush.domain.beings.Child;
 import candy.crush.domain.beings.DrMonkey;
 import candy.crush.domain.beings.Wildlife;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.*;
 
 public class Simulation {
 
     public static final int MAX_SIZE = 512;
+    private final ArrayList<Being> beings;
 
-    public Set<Being> getBeings() {
+    public ArrayList<Being> getBeings() {
         return beings;
     }
+    public Being getRandomBeing() {
+        if (beings.isEmpty()) {
+            return null;
+        }
 
-    private final Set<Being> beings;
+        Being being = beings.get(random.nextInt(beings.size()));
+        beings.remove(being);
+        return being;
+    }
+
+    public Set<Child> getChildren() {
+        return children;
+    }
+
     private final Set<Child> children;
     private final DrMonkey theDoctor;
 
@@ -41,7 +55,7 @@ public class Simulation {
             "Babetje",
     };
     public Simulation() {
-        beings = new HashSet<>();
+        beings = new ArrayList<>();
         children = new HashSet<>();
         theDoctor = new DrMonkey("Dr. Monkey", 1);
         random = new Random();

@@ -1,7 +1,10 @@
 package candy.crush;
 
+import candy.crush.domain.beings.Being;
 import candy.crush.domain.beings.Wildlife;
 import org.junit.jupiter.api.*;
+
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -34,4 +37,24 @@ class SimulationTest {
        this.addBeing();
 
     }
+
+    @Test
+    void getRandomBeingRemovesWildlife() {
+        simulation.generateWildLife(10);
+        ArrayList<Being> beings = simulation.getBeings();
+        simulation.getRandomBeing();
+        assertEquals(9, beings.size());
+    }
+
+    @Test
+    void getRandomBeingWithoutBeings() {
+        assertNull(simulation.getRandomBeing());
+    }
+
+    @Test
+    void getRandom() {
+        simulation.generateWildLife(10);
+        assertNotNull(simulation.getRandomBeing());
+    }
+
 }

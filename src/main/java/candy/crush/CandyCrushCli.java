@@ -1,13 +1,19 @@
 package candy.crush;
 
+import candy.crush.api.apiAction;
+import candy.crush.domain.beings.Child;
+import candy.crush.domain.items.Ball;
+
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Scanner;
+import java.util.ServiceLoader;
 
 import static java.lang.System.*;
 
 public class CandyCrushCli {
 
-    private enum ANSI {
+    public enum ANSI {
         RESET("\u001B[0m"),
         BLACK("\u001B[30m"),
         RED("\u001B[31m"),
@@ -33,11 +39,11 @@ public class CandyCrushCli {
         }
     }
 
-    private static void print(String toPrint) {
+    public static void print(String toPrint) {
         print(toPrint, ANSI.WHITE);
     }
 
-    private static void print(String toPrint, ANSI color) {
+    public static void print(String toPrint, ANSI color) {
         out.println(color + toPrint + ANSI.RESET);
     }
 
@@ -90,34 +96,33 @@ public class CandyCrushCli {
             }
         }
     }
-
     private void handleCommand(String command, String[] commandArgs) {
-        switch (command) {
-            case "help":
-                showHelp();
-                break;
-            case "awl":
-            case "addwildlife":
-                Integer amountOfWildlifeToAdd;
-                if (commandArgs[0] != null) {
-                    amountOfWildlifeToAdd = Integer.parseInt(commandArgs[0]);
-                } else {
-                    amountOfWildlifeToAdd = 10;
-                }
-                addWildLife(amountOfWildlifeToAdd);
-                break;
-            case "ac":
-            case "addchild":
-                addChild();
-                break;
-            case "fs":
-            case "fullsimulation":
-                runFullSimulation();
-                break;
-            default:
+        if (command.equals("help")) {
+            showHelp();
+        } else {
+            try {
+                apiAction o = (apiAction) Class.forName("candy.crush.api." + command).newInstance();
+                o.setSimulation(this.simulation);
+                o.doAction(commandArgs);
+            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException i) {
+                // print("Could not find / instantiate action " + command);
                 showUndefinedCommandInformation(command, commandArgs);
-                break;
+            }
         }
+
+//        switch (command) {
+//            case "help":
+//                showHelp();
+//                break;
+//            case "ac":
+//            case "addchild":
+//                addChild();
+//                break;
+//            case "fs":
+//            case "fullsimulation":
+//                runFullSimulation();
+//                break;
+//        }
     }
 
 
@@ -127,15 +132,6 @@ public class CandyCrushCli {
 
     private void addChild() {
         simulation.addChild();
-    }
-
-    private void runFullSimulation() {
-        print("Welcome to the CrushOMatic 9000 DEMO!", ANSI.RED);
-        print("First, let's add some animals to the kingdom.", ANSI.YELLOW);
-        this.addWildLife(10);
-        print("Let's add a Child to catch all those animals..");
-        this.addChild();
-        print("Give the kid a Ball..");
     }
 
     private void printFooter() {
@@ -160,10 +156,14 @@ public class CandyCrushCli {
 
 
     private static void showHelp() {
-        print("addwildlife [numberOfWildLife]       - adds wildlife to the simulation");
-        print("addchild                             - adds a single child to the simulation");
-        print("fulsimulation                        - run a full simulation");
-        print("help                                 - shows this information");
-        print("quit                                 - ends this process");
+        ServiceLoader<apiAction> load = ServiceLoader.load(apiAction.class);
+        load.forEach(service -> {
+            print(service.getClass().getSimpleName() + "\t\t\t" + service.getDescription());
+        });
+//        print("addwildlife [numberOfWildLife]       - adds wildlife to the simulation");
+//        print("addchild                             - adds a single child to the simulation");
+//        print("fulsimulation                        - run a full simulation");
+//        print("help                                 - shows this information");
+//        print("quit                                 - ends this process");
     }
 }
